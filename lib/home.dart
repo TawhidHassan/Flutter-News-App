@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:flutter_news_app/screens/home/homePage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
@@ -19,6 +20,22 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25),
+          child: IconButton(
+            icon: SvgPicture.asset("assets/icons/drawer.svg",
+              height: 15,
+              width: 34,),
+            onPressed: (){},
+          ),
+        ),
+        backgroundColor: currentIndex == 3 ? Color(0xffF7F8FA) : Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        titleSpacing: 0,
+      ),
       bottomNavigationBar: BubbleBottomBar(
         hasNotch: true,
         opacity: 0,
@@ -94,7 +111,7 @@ class _HomeState extends State<Home> {
       ),
 
       body: <Widget>[
-        Container(color: Colors.red,),
+        HomePage(),
         Container(color: Colors.green,),
         Container(color: Colors.orange,),
         Container(color: Colors.blue,),
