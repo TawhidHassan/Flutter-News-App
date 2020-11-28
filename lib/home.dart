@@ -3,6 +3,9 @@ import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter_news_app/screens/home/homePage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'backend/rss_to_json.dart';
+
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -15,6 +18,61 @@ class _HomeState extends State<Home> {
     setState(() {
       currentIndex = index;
     });
+  }
+
+  Map<String,List>newsData=Map<String,List>();
+  bool isLoading=true;
+  getData() async{
+    Future.wait([
+      rssToJson('topnews'),
+      rssToJson('india'),
+      rssToJson('world'),
+      rssToJson('business'),
+      rssToJson('sports'),
+      rssToJson('cricket'),
+      rssToJson('tech-features'),
+      rssToJson('education'),
+      rssToJson('entertainment'),
+      rssToJson('music'),
+      rssToJson('lifestyle'),
+      rssToJson('health-fitness'),
+      rssToJson('fashion-trends'),
+      rssToJson('art-culture'),
+      rssToJson('travel'),
+      rssToJson('books'),
+      rssToJson('realestate'),
+      rssToJson('its-viral'),
+     ]).then((value) {
+      newsData['topnews'] = value[0];
+      newsData['india'] = value[1];
+      newsData['world'] = value[2];
+      newsData['business'] = value[3];
+      newsData['sports'] = value[4];
+      newsData['cricket'] = value[5];
+      newsData['tech'] = value[6];
+      newsData['education'] = value[7];
+      newsData['entertainment'] = value[8];
+      newsData['music'] = value[9];
+      newsData['lifestyle'] = value[10];
+      newsData['health-fitness'] = value[11];
+      newsData['fashion-trends'] = value[12];
+      newsData['art-culture'] = value[13];
+      newsData['travel'] = value[14];
+      newsData['books'] = value[15];
+      newsData['realestate'] = value[16];
+      newsData['its-viral'] = value[17];
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+
+    getData();
+
+    super.initState();
   }
 
   @override
@@ -110,8 +168,10 @@ class _HomeState extends State<Home> {
         ],
       ),
 
-      body: <Widget>[
-        HomePage(),
+      body:isLoading?Center(
+        child: CircularProgressIndicator(),
+      ): <Widget>[
+        HomePage(newsData: newsData,),
         Container(color: Colors.green,),
         Container(color: Colors.orange,),
         Container(color: Colors.blue,),

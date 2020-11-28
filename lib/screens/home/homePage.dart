@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/model/categories_model.dart';
 import 'package:flutter_news_app/reusable/custom_cards.dart';
 
+import '../../utils.dart';
+
 class HomePage extends StatefulWidget {
+  final Map<String ,List>newsData;
+
+  const HomePage({Key key, this.newsData}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -97,10 +102,31 @@ class _HomePageState extends State<HomePage>
         body: Container(
           child: TabBarView(controller: _tabController,
               children: List.generate(categories.length, (index) {
+                var key=categories[index].imageUrl.toString().split('/')[3].split('.')[0].replaceAll("_", "-");
                 return ListView.builder(
                   itemCount: 10,
-                  itemBuilder: (context, index) {
-                  return HomePageCard();
+                  itemBuilder: (context, i) {
+                    String time = widget.newsData[key][i]['pubDate']['__cdata'];
+                    DateTime timeIST = DateTime.parse(time.split(" ")[3] +
+                        "-" +
+                        getMonthNumberFromName(month: time.split(" ")[2]) +
+                        "-" +
+                        time.split(" ")[1] +
+                        " " +
+                        time.split(" ")[4]);
+                    timeIST = timeIST
+                        .add(Duration(hours: 5))
+                        .add(Duration(minutes: 30));
+                  return HomePageCard(
+                    title: widget.newsData[key][i]['title']['__cdata'],
+                    subtitle: widget.newsData[key][i]['description']['__cdata'],
+                    imageUrl: widget.newsData[key][i]['media\$content']['url'],
+                    time: timeIST.day.toString() +
+                        " " +
+                        getMonthNumberInWords(month: timeIST.month) +
+                        " " +
+                        timeIST.toString().split(" ")[1].substring(0, 5),
+                  );
                 },
                   padding: EdgeInsets.symmetric(horizontal: 25),
                 );

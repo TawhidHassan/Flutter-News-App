@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.1
   bubble_bottom_bar:
   flutter_svg:
+  xml2json:
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:
