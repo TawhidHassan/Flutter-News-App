@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'backend/rss_to_json.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -19,10 +18,9 @@ class _HomeState extends State<Home> {
       currentIndex = index;
     });
   }
-
-  Map<String,List>newsData=Map<String,List>();
-  bool isLoading=true;
-  getData() async{
+  Map<String, List> newsData = Map<String, List>();
+  bool isLoading = true;
+  getData()async{
     Future.wait([
       rssToJson('topnews'),
       rssToJson('india'),
@@ -42,7 +40,7 @@ class _HomeState extends State<Home> {
       rssToJson('books'),
       rssToJson('realestate'),
       rssToJson('its-viral'),
-     ]).then((value) {
+    ]).then((value) {
       newsData['topnews'] = value[0];
       newsData['india'] = value[1];
       newsData['world'] = value[2];
@@ -69,10 +67,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-
-    getData();
-
+    // TODO: implement initState
     super.initState();
+    getData();
   }
 
   @override
@@ -82,11 +79,15 @@ class _HomeState extends State<Home> {
         automaticallyImplyLeading: false,
         title: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25),
-          child: IconButton(
-            icon: SvgPicture.asset("assets/icons/drawer.svg",
-              height: 15,
-              width: 34,),
-            onPressed: (){},
+          child: Builder(
+            builder: (context) => IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/drawer.svg",
+                height: 15,
+                width: 34,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
           ),
         ),
         backgroundColor: currentIndex == 3 ? Color(0xffF7F8FA) : Colors.white,
@@ -94,13 +95,147 @@ class _HomeState extends State<Home> {
         centerTitle: false,
         titleSpacing: 0,
       ),
+      drawer: Container(
+        width: MediaQuery.of(context).size.width / 1.25,
+        child: Drawer(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 30,
+              ),
+              DrawerHeader(
+                child: Container(
+                    height: 142,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      "assets/images/ten_news.png",
+                    )),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    currentIndex = 3;
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontFamily: 'Avenir',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: 45,
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                    fontFamily: 'Avenir',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: 45,
+              ),
+              Text(
+                'About',
+                style: TextStyle(
+                  fontFamily: 'Avenir',
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 45,
+              ),
+              Text(
+                'Log Out',
+                style: TextStyle(
+                  fontFamily: 'Avenir',
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 45,
+              ),
+              Material(
+                borderRadius: BorderRadius.circular(500),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(500),
+                  splashColor: Colors.black45,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.black,
+                    child: Icon(Icons.arrow_back, color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 65,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.black,
+                      child: Center(
+                        child: Text(
+                          'v1.0.1',
+                          style: TextStyle(
+                            fontFamily: 'Avenir',
+                            fontSize: 20,
+                            color: const Color(0xffffffff),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
+      body: isLoading ? Center(
+        child: CircularProgressIndicator(),
+      ): <Widget>[
+        HomePage(
+          newsData: newsData,
+        ),
+        Container(
+          color: Colors.red,
+        ),
+        Container(
+          color: Colors.yellow,
+        ),
+        Container(
+          color: Colors.green,
+        ),
+      ][currentIndex],
       bottomNavigationBar: BubbleBottomBar(
-        hasNotch: true,
         opacity: 0,
         currentIndex: currentIndex,
         onTap: changePage,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        //border radius doesn't work when the notch is enabled.
         elevation: 8,
         items: <BubbleBottomBarItem>[
           BubbleBottomBarItem(
@@ -167,15 +302,6 @@ class _HomeState extends State<Home> {
               title: Text("Profile")),
         ],
       ),
-
-      body:isLoading?Center(
-        child: CircularProgressIndicator(),
-      ): <Widget>[
-        HomePage(newsData: newsData,),
-        Container(color: Colors.green,),
-        Container(color: Colors.orange,),
-        Container(color: Colors.blue,),
-      ][currentIndex],
     );
   }
 }
