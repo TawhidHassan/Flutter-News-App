@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter_news_app/screens/home/homePage.dart';
+import 'package:flutter_news_app/screens/home/search/search.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'backend/rss_to_json.dart';
@@ -221,9 +222,7 @@ class _HomeState extends State<Home> {
         HomePage(
           newsData: newsData,
         ),
-        Container(
-          color: Colors.red,
-        ),
+        Search(),
         Container(
           color: Colors.yellow,
         ),
